@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
+  <title>Ч</title>
+  <!-- знак в поле 2u × 1u: черта на оси, точка в центре второй половины.
+       в тёмном интерфейсе браузера знак светлеет вместе с ним -->
+  <style>
+    .mark { stroke: #000000; fill: #000000 }
+    @media (prefers-color-scheme: dark) {
+      .mark { stroke: #F2F0EC; fill: #F2F0EC }
+    }
+  </style>
+  <line class="mark" x1="100" y1="15" x2="100" y2="85"
+        stroke-width="10" stroke-linecap="butt"/>
+  <circle class="mark" cx="150" cy="50" r="15"/>
+</svg>

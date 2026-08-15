@@ -1,0 +1,87 @@
+/* ─────────────────────────────────────────────────────────────
+   Ч — галерея искусства и слушания
+   Токены дизайн-системы. Светлая тема — база.
+   Документация: index.html
+   ───────────────────────────────────────────────────────────── */
+
+:root{
+  /* ── цвет: три значения, из них два рабочих ── */
+  --wall:      #FFFFFF;   /* стена, тишина, пустая половина */
+  --ink:       #000000;   /* знак: черта и точка, текст     */
+  --ochre:     #A78353;   /* час: дерево, лампа. 1% площади */
+
+  /* производные — нейтрали с уклоном в охру, не серые */
+  --surface:   #FBFAF8;
+  --hairline:  #DCD7CE;
+  --hairline-strong:#B8B1A5;
+  --muted:     #6E675C;
+  --focus:     var(--ochre);
+
+  /* чертежи и линейная графика: инвертируются в тёмной теме */
+  --img-filter: none;
+
+  /* ── модуль системы ── */
+  --u: clamp(24px, 4.4vw, 56px);
+
+  /* ── типографика: одно семейство ── */
+  --sans: "Helvetica Neue", HelveticaNeue, Helvetica, "Nimbus Sans", Arial, sans-serif;
+
+  --w-ultra: 100;  /* UltraLight — вордмарк, только от 120 px  */
+  --w-light: 300;  /* Light — рабочее начертание               */
+  --w-reg:   400;  /* Regular — метки, всё мельче 14 px        */
+  --w-med:   500;  /* Medium — выделение, не чаще раза на экран */
+  /* Bold, Black, Condensed и наклонные не используются */
+
+  --t-hero:  clamp(96px, 17vw, 240px);  /* ls −0.030em · lh 0.78  */
+  --t-h1:    clamp(28px, 4.4vw, 52px);  /* ls −0.030em · lh 1.04  */
+  --t-h2:    24px;                      /* ls −0.018em · lh 1.22  */
+  --t-body:  17px;                      /* lh 1.60 · 63 знака     */
+  --t-small: 14.5px;
+  --t-label: 11px;                      /* ls +0.18em · uppercase */
+
+  /* цифры у Helvetica табличные по построению — моноширинный не нужен */
+  --numeric: tabular-nums;
+
+  /* ── знак: поле 2u × 1u, всё производно от --u ── */
+  --mark-field-w: calc(var(--u) * 2);
+  --mark-field-h: var(--u);
+  --mark-line-l:  calc(var(--u) * 0.7);   /* длина черты                  */
+  --mark-line-w:  calc(var(--u) / 10);    /* толщина = площади точки      */
+  --mark-dot:     calc(var(--u) * 0.3);   /* диаметр точки                */
+  --mark-gap:     calc(var(--u) * 0.5);   /* центр черты → центр точки    */
+  --mark-clear:   calc(var(--u) * 0.5);   /* охранное поле со всех сторон */
+  --mark-cap:     butt;                   /* концы черты прямые           */
+
+  /* ── движение: единственный переход ── */
+  --fade: 600ms linear;
+
+  /* ── композиция ── */
+  --measure: 63ch;   /* длина строки основного текста */
+  --pad: clamp(20px, 5vw, 88px);
+}
+
+/* Тёмная тема — второе состояние зала: свет выключен.
+   Пропорция 90 / 9 / 1 сохраняется. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --wall:      #101010;
+    --ink:       #F2F0EC;
+    --ochre:     #C9A16A;
+    --surface:   #171614;
+    --hairline:  #2C2A26;
+    --hairline-strong:#4A463F;
+    --muted:     #9B948A;
+    --img-filter: invert(.95);
+  }
+}
+
+:root[data-theme="dark"]{
+  --wall:      #101010;
+  --ink:       #F2F0EC;
+  --ochre:     #C9A16A;
+  --surface:   #171614;
+  --hairline:  #2C2A26;
+  --hairline-strong:#4A463F;
+  --muted:     #9B948A;
+  --img-filter: invert(.95);
+}

@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+._*
+
+# редакторы
+.vscode/
+.idea/
+*.swp
+
+# локальные настройки Claude Code
+.claude/
+
+# прежний черновик страницы правил
+rules.old.html

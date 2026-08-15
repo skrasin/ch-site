@@ -1,0 +1,128 @@
+/* ─────────────────────────────────────────────────────────────
+   Ч — правила посещения. Текстовая страница.
+   Одна колонка, выключка влево, правая половина пуста.
+   Три ступени набора и больше ничего: заголовок, подзаголовок, текст.
+   Токены не переопределяются: brand/tokens.css подключён как есть.
+   ───────────────────────────────────────────────────────────── */
+
+*,*::before,*::after{ box-sizing:border-box }
+
+html{ -webkit-text-size-adjust:100% }
+
+body{
+  margin:0;
+  background:var(--wall);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-weight:var(--w-light);
+  font-size:var(--t-small);
+  line-height:1.42;
+  font-variant-numeric:var(--numeric);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+::selection{ background:var(--ochre); color:var(--wall) }
+
+.skip{
+  position:absolute;
+  left:-9999px;
+  font-weight:var(--w-reg);
+  font-size:var(--t-label);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.skip:focus{
+  left:var(--pad);
+  top:var(--pad);
+  z-index:2;
+  background:var(--wall);
+  padding:10px;
+}
+
+.page{
+  max-width:1400px;
+  margin:0 auto;
+  padding:calc(var(--u) * 1.2) max(var(--pad), 32px) calc(var(--u) * 2);
+}
+
+/* ── верхняя строка: заголовок слева, возврат справа ────────── */
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:2em;
+  margin-bottom:2.4em;
+}
+
+.back{
+  flex:none;
+  color:var(--ink);
+  text-decoration:none;
+  font-weight:var(--w-reg);
+  font-size:13px;
+  line-height:1.2;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.back:focus-visible{ outline:2px solid var(--focus); outline-offset:4px }
+
+/* ── текст ──────────────────────────────────────────────────── */
+
+/* колонка тянется по ширине страницы, а не по мерке в 63 знака */
+.text{ max-width:none }
+
+/* заголовки набраны как метки на главной: прописные 13 px с трекингом */
+h1,
+h2{
+  font-weight:var(--w-reg);
+  font-size:13px;
+  line-height:1.2;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+h1{ margin:0 }
+h2{ margin:0 0 .9em }
+
+p{ margin:0 0 .55em }
+p:last-child{ margin-bottom:0 }
+
+/* раздел отбивается воздухом, а не линейкой */
+.text section{ margin-top:calc(var(--u) * 0.7) }
+
+/* ── подвал ─────────────────────────────────────────────────── */
+
+.foot{
+  margin-top:calc(var(--u) * 1.4);
+  padding-top:calc(var(--u) * 0.6);
+  border-top:1px solid var(--hairline);
+}
+
+.foot__name{
+  margin:0 0 .8em;
+  font-weight:var(--w-light);
+  font-size:var(--t-body);
+  line-height:1;
+}
+
+/* курсива в системе нет — снимаем наклон, который <address> даёт сам */
+.foot__contacts{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:.35em;
+  font-style:normal;
+}
+.foot__contacts a{
+  color:var(--ink);
+  text-decoration:none;
+}
+.foot__contacts a:focus-visible{ outline:2px solid var(--focus); outline-offset:4px }
+
+/* движение: единственный переход — проявление, 600 мс, линейно */
+@media (prefers-reduced-motion: no-preference){
+  .page{ animation:fade var(--fade) both }
+  @keyframes fade{ from{ opacity:0 } to{ opacity:1 } }
+}

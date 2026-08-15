@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ч — галерея искусства и слушания</title>
+<meta name="description" content="Один человек, один час, один объект.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="brand/tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="stack">
+
+    <svg class="mark" viewBox="0 0 200 100" role="img"
+         aria-label="Ч — галерея искусства и слушания">
+      <line x1="100" y1="15" x2="100" y2="85"
+            stroke="currentColor" stroke-width="10" stroke-linecap="butt"/>
+      <circle cx="150" cy="50" r="15" fill="currentColor"/>
+    </svg>
+
+    <div class="facade">
+      <button type="button" class="facade__door facade__door--left"
+              data-hall="Зал 1" aria-label="Зал 1"></button>
+      <button type="button" class="facade__door facade__door--right"
+              data-hall="Зал 3" aria-label="Зал 3"></button>
+      <img class="facade__draft" src="brand/facade-2x1.png" width="1800" height="900"
+           alt="Чертёж главного фасада: кирпичная стена, одна дверь и два окна">
+    </div>
+
+    <div class="booking">
+
+      <div class="field">
+        <span class="field__label" id="f-hall">Зал</span>
+        <button type="button" class="field__value" id="v-hall"
+                data-panel="hall" aria-haspopup="true" aria-expanded="false"
+                aria-labelledby="f-hall v-hall">не выбран</button>
+        <div class="panel" id="panel-hall">
+          <button type="button" class="opt" data-value="Зал 1">Зал 1</button>
+          <button type="button" class="opt" data-value="Зал 3">Зал 3</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field__label" id="f-date">Дата</span>
+        <button type="button" class="field__value" id="v-date"
+                data-panel="date" aria-haspopup="true" aria-expanded="false"
+                aria-labelledby="f-date v-date">не выбрана</button>
+        <div class="panel panel--cal" id="panel-date">
+          <div class="cal__head">
+            <button type="button" class="cal__nav" data-step="-1" aria-label="Предыдущий месяц">←</button>
+            <span class="cal__month" aria-live="polite"></span>
+            <button type="button" class="cal__nav" data-step="1" aria-label="Следующий месяц">→</button>
+          </div>
+          <div class="cal__week" aria-hidden="true">
+            <span>пн</span><span>вт</span><span>ср</span>
+            <span>чт</span><span>пт</span><span>сб</span><span>вс</span>
+          </div>
+          <div class="cal__grid"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field__label" id="f-time">Время</span>
+        <button type="button" class="field__value" id="v-time"
+                data-panel="time" aria-haspopup="true" aria-expanded="false"
+                aria-labelledby="f-time v-time">не выбрано</button>
+        <div class="panel panel--time" id="panel-time"></div>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button type="button" class="book">Забронировать</button>
+      <a class="rules" href="rules.html">Правила посещения</a>
+    </div>
+
+    <label class="theme">
+      <input class="theme__input" type="checkbox" role="switch" aria-label="Тьма">
+      <span class="theme__track" aria-hidden="true">
+        <span class="theme__knob theme__knob--off"></span>
+        <span class="theme__knob theme__knob--on"></span>
+      </span>
+    </label>
+
+    <address class="address">
+      <a class="address__link" href="https://yandex.ru/maps/-/CTcTaWMd"
+         target="_blank" rel="noopener">Москва, Рыбников переулок, 9с2</a>
+    </address>
+
+  </div>
+
+<script src="site.js"></script>
+</body>
+</html>

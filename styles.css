@@ -1,0 +1,522 @@
+/* ─────────────────────────────────────────────────────────────
+   Ч — сайт галереи. Одна страница.
+   Знак и под ним чертёж фасада. Двери отзываются на курсор:
+   под чертёж подкладывается охра, линии остаются сверху.
+   Токены не переопределяются: brand/tokens.css подключён как есть.
+   ───────────────────────────────────────────────────────────── */
+
+*,*::before,*::after{ box-sizing:border-box }
+
+html{ -webkit-text-size-adjust:100% }
+
+:root{
+  /* охранное поле знака: 0.5u, но не меньше 32 px */
+  --clear: max(32px, var(--mark-clear));
+  /* поле страницы не уже охранного поля знака */
+  --page-pad: max(var(--pad), var(--clear));
+  /* строка переключателя: метка 11 px с подчёркиванием */
+  --switch-h: 20px;
+  /* строка брони: метка, значение, волосяная линейка */
+  --bar-h: 55px;
+  /* строка адреса внизу */
+  --addr-h: 20px;
+  /* ритм под чертежом: теснее охранного поля знака */
+  --gap: 24px;
+  /* просвет между колонками строки брони */
+  --col-gap: calc(var(--u) * 0.9);
+  /* открытие сайта: чертёж проявляется дольше обычного перехода */
+  --fade-open: 1400ms;
+  /* кнопка брони и ссылка под ней */
+  --book-h: 38px;
+  --actions-h: 65px;
+}
+
+body{
+  margin:0;
+  min-height:100svh;
+  display:grid;
+  /* safe center: когда содержимое выше экрана, оно прижимается к верху,
+     а не обрезается сверху — это случай телефона в вертикали */
+  align-content:safe center;
+  justify-items:center;
+  /* по вертикали хватает охранного поля знака, по горизонтали — поле страницы */
+  padding:var(--clear) var(--page-pad);
+
+  background:var(--wall);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-weight:var(--w-light);
+  font-size:var(--t-body);
+  line-height:1.60;
+  font-variant-numeric:var(--numeric);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+::selection{ background:var(--ochre); color:var(--wall) }
+
+/* по тапу управляющие элементы не выделяются текстом и не мигают
+   системной подсветкой — чужого цвета на экране не появляется */
+.facade__door,
+.field__value,
+.opt,
+.cal__day,
+.cal__nav,
+.book,
+.rules,
+.theme{
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+.stack{
+  width:100%;          /* иначе ширина чертежа считалась бы от самой стопки */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:var(--gap);
+
+  /* общая ширина кадра: по ней выровнены и чертёж, и строка брони.
+     кадр 2:1, поэтому высота ограничивает ширину вдвое сильнее.
+     600 px — нижняя граница: на низком окне лучше прокрутка,
+     чем чертёж размером с почтовую марку */
+  --frame: max(600px, min(
+    100%,
+    1400px,
+    calc((100svh - var(--clear) * 2
+          - var(--mark-field-h) - var(--bar-h) - var(--actions-h)
+          - var(--switch-h) - var(--addr-h)
+          - var(--clear) - var(--gap) * 4) * 2)
+  ));
+}
+
+/* знак: черта на оси композиции, точка в правой половине поля.
+   ни рамки, ни плашки; цвет берётся из --ink и живёт в обеих темах. */
+.mark{
+  display:block;
+  width:var(--mark-field-w);
+  height:var(--mark-field-h);
+  color:var(--ink);
+  /* охранное поле знака остаётся 0.5u/32 px, хотя ритм ниже теснее */
+  margin-bottom:calc(var(--clear) - var(--gap));
+}
+
+/* чертёж стоит в белом поле, воздух со всех сторон.
+   кадр строго 2:1 — от него отсчитываются двери. */
+.facade{
+  position:relative;
+  width:var(--frame);
+  aspect-ratio:2 / 1;
+}
+
+/* линии прозрачные — в тёмной теме инвертируются токеном */
+.facade__draft{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  filter:var(--img-filter);
+  pointer-events:none;         /* курсор доходит до дверей под чертежом */
+}
+
+/* двери в кадре 1800 × 900: заливка по стойкам коробки, сверху от
+   собственной перемычки. Кирпичные швы идут через всю стену и в
+   заливку не входят. */
+.facade__door{
+  position:absolute;
+  appearance:none;
+  margin:0;
+  padding:0;
+  border:0;
+  background:var(--ochre);
+  opacity:0;
+  cursor:pointer;
+}
+
+/* левая: 378–637 × 487–846, донизу, до земли */
+.facade__door--left{
+  left:21%;
+  top:54.1111%;
+  width:14.3889%;
+  height:39.8889%;
+}
+
+/* правая: 1329–1584 × 354–750, донизу, до подоконника */
+.facade__door--right{
+  left:73.8333%;
+  top:39.3333%;
+  width:14.2222%;
+  height:44%;
+}
+
+/* дверь горит под курсором и остаётся гореть, когда её зал выбран */
+.facade__door:hover,
+.facade__door:active,
+.facade__door.is-chosen{ opacity:1 }
+
+.facade__door:focus-visible{
+  opacity:1;
+  outline:2px solid var(--focus);
+  outline-offset:3px;
+}
+
+/* пока курсор на одной двери, выбранная гаснет: горит всегда одна */
+.facade:has(.facade__door:hover) .facade__door.is-chosen:not(:hover){ opacity:0 }
+
+/* ── строка брони: зал, дата, время ─────────────────────────── */
+
+.booking{
+  width:var(--frame);
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:var(--col-gap);
+}
+
+.field{ position:relative }
+
+/* метка прописными с трекингом, выключка влево.
+   13 px — верхняя граница, которую система отводит прописным меткам */
+.field__label{
+  display:block;
+  margin-bottom:.9em;
+  font-weight:var(--w-reg);
+  font-size:13px;
+  line-height:1;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink);
+}
+
+/* значение: Light, цифры табличные, под ним волосяная */
+.field__value{
+  appearance:none;
+  display:block;
+  width:100%;
+  margin:0;
+  padding:0 0 .5em;
+  text-align:left;
+  background:none;
+  border:0;
+  border-bottom:1px solid var(--hairline-strong);
+  font-family:inherit;
+  font-weight:var(--w-light);
+  font-size:var(--t-body);
+  line-height:1.2;
+  font-variant-numeric:var(--numeric);
+  color:var(--ink);
+  cursor:pointer;
+}
+.field__value:hover{ border-bottom-color:var(--ink) }
+.field__value[aria-expanded="true"]{ border-bottom-color:var(--ochre) }
+.field__value:focus-visible{ outline:2px solid var(--focus); outline-offset:4px }
+
+/* панель: проявляется и растворяется, не сдвигая ничего вокруг.
+   раскрывается вверх — строка брони стоит у нижнего края экрана */
+.panel{
+  position:absolute;
+  z-index:2;
+  left:0;
+  bottom:100%;
+  min-width:100%;
+  margin-bottom:calc(var(--u) * 0.5);
+  padding:calc(var(--u) * 0.3) calc(var(--u) * 0.4);
+  background:var(--wall);
+  border:1px solid var(--hairline);
+  opacity:0;
+  visibility:hidden;
+}
+.panel.is-open{ opacity:1; visibility:visible }
+
+.panel--cal{ width:max(100%, 304px) }
+
+/* строка списка: волосяная снизу, выбранная — охряная */
+.opt{
+  appearance:none;
+  display:block;
+  width:100%;
+  margin:0;
+  padding:.75em 0;
+  text-align:left;
+  background:none;
+  border:0;
+  border-bottom:1px solid var(--hairline);
+  font-family:inherit;
+  font-weight:var(--w-light);
+  font-size:var(--t-body);
+  line-height:1.2;
+  font-variant-numeric:var(--numeric);
+  color:var(--ink);
+  cursor:pointer;
+}
+.opt:last-child{ border-bottom-color:transparent }
+.opt:hover{ background:var(--surface) }
+.opt[aria-current="true"]{ border-bottom-color:var(--ochre) }
+.opt:focus-visible{ outline:2px solid var(--focus); outline-offset:-2px }
+
+.panel--time{ max-height:min(62svh, 540px); overflow-y:auto }
+
+/* ── кнопка брони и ссылка под ней ──────────────────────────── */
+
+.actions{
+  width:var(--frame);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+}
+
+/* прямоугольник, обведённый охрой: заливки нет — иначе в одной из тем
+   текст на охре потерял бы контраст. Углы прямые. */
+.book{
+  appearance:none;
+  /* рамка кнопки повторяет длину линейки поля над ней: колонка из трёх.
+     доля считается от .actions — его ширина уже задана кадром */
+  width:calc((100% - var(--col-gap) * 2) / 3);
+  height:var(--book-h);
+  margin:0;
+  padding:0 calc(var(--u) * 0.7);
+  background:none;
+  border:1px solid var(--ochre);
+  font-family:inherit;
+  font-weight:var(--w-reg);
+  font-size:var(--t-label);
+  line-height:1;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink);
+  cursor:pointer;
+}
+.book:hover{ background:var(--surface) }
+.book:focus-visible{ outline:2px solid var(--focus); outline-offset:4px }
+
+/* второе действие — только текст: ни обводки, ни линии под строкой */
+.rules{
+  appearance:none;
+  display:inline-block;
+  margin:0;
+  padding:0;
+  background:none;
+  border:0;
+  text-decoration:none;
+  font-family:inherit;
+  font-weight:var(--w-reg);
+  font-size:var(--t-label);   /* тот же кегль, что на кнопке */
+  line-height:1;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink);
+  cursor:pointer;
+}
+.rules:focus-visible{ outline:2px solid var(--focus); outline-offset:4px }
+
+/* ── календарь ──────────────────────────────────────────────── */
+
+.cal__head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1em;
+  padding-bottom:1em;
+}
+.cal__month{
+  font-weight:var(--w-reg);
+  font-size:var(--t-label);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink);
+}
+.cal__nav{
+  appearance:none;
+  margin:0;
+  padding:0 .3em;
+  background:none;
+  border:0;
+  font-family:inherit;
+  font-weight:var(--w-light);
+  font-size:var(--t-body);
+  line-height:1;
+  color:var(--ink);
+  cursor:pointer;
+}
+.cal__nav[disabled]{ color:var(--hairline-strong); cursor:default }
+.cal__nav:focus-visible{ outline:2px solid var(--focus); outline-offset:2px }
+
+.cal__week,
+.cal__grid{
+  display:grid;
+  grid-template-columns:repeat(7, 1fr);
+  gap:2px;
+}
+.cal__week{ padding-bottom:.4em }
+.cal__week span{
+  text-align:center;
+  font-weight:var(--w-reg);
+  font-size:var(--t-label);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink);
+}
+
+.cal__day{
+  appearance:none;
+  margin:0;
+  padding:.5em 0;
+  text-align:center;
+  background:none;
+  border:0;
+  border-bottom:1px solid transparent;
+  font-family:inherit;
+  font-weight:var(--w-light);
+  font-size:var(--t-small);
+  line-height:1;
+  font-variant-numeric:var(--numeric);
+  color:var(--ink);
+  cursor:pointer;
+}
+.cal__day:hover{ background:var(--surface) }
+.cal__day[disabled]{ color:var(--hairline); cursor:default; background:none }
+.cal__day[aria-current="true"]{ border-bottom-color:var(--ochre) }
+.cal__day:focus-visible{ outline:2px solid var(--focus); outline-offset:-2px }
+
+/* ── свет в зале: светлая тема или тёмная ───────────────────── */
+
+.theme{
+  display:inline-flex;
+  align-items:center;
+  height:var(--switch-h);
+  cursor:pointer;
+}
+
+/* тумблер: сам чекбокс убран с глаз, но остаётся в фокусе и в дереве
+   доступности — состояние читается без подпорок */
+.theme__input{
+  position:absolute;
+  width:1px;
+  height:1px;
+  margin:0;
+  opacity:0;
+  pointer-events:none;
+}
+
+/* дорожка: прямоугольник с волосяной обводкой, углы прямые —
+   скруглений в системе нет */
+.theme__track{
+  position:relative;
+  flex:none;
+  display:block;
+  width:34px;
+  height:16px;
+  border:1px solid var(--hairline-strong);
+}
+.theme:hover .theme__track{ border-color:var(--ink) }
+.theme__input:focus-visible + .theme__track{
+  outline:2px solid var(--focus);
+  outline-offset:4px;
+}
+
+/* рукоятка не едет: движения в системе нет. Левая растворяется,
+   правая проявляется — тот же переход, что и у всего остального. */
+.theme__knob{
+  position:absolute;
+  top:2px;
+  bottom:2px;
+  width:13px;
+  opacity:0;
+}
+.theme__knob--off{ left:2px; background:var(--ink); opacity:1 }
+.theme__knob--on{ right:2px; background:var(--ochre) }
+
+.theme__input:checked + .theme__track .theme__knob--off{ opacity:0 }
+.theme__input:checked + .theme__track .theme__knob--on{ opacity:1 }
+
+/* ── адрес ──────────────────────────────────────────────────── */
+
+/* курсива в системе нет — снимаем наклон, который <address> даёт сам */
+.address{
+  height:var(--addr-h);
+  font-style:normal;
+  font-weight:var(--w-light);
+  font-size:var(--t-small);
+  line-height:1.2;
+  font-variant-numeric:var(--numeric);
+  color:var(--ink);
+}
+
+.address__link{
+  color:inherit;
+  text-decoration:none;
+}
+.address__link:focus-visible{ outline:2px solid var(--focus); outline-offset:4px }
+
+/* движение: единственный переход — проявление, 600 мс, линейно */
+@media (prefers-reduced-motion: no-preference){
+  @keyframes fade{ from{ opacity:0 } to{ opacity:1 } }
+
+  /* открытие: сначала проявляется чертёж, за ним всё остальное.
+     Ни сдвигов, ни масштабирования — только проявление, линейно. */
+  .facade{ animation:fade var(--fade-open) linear both }
+
+  .mark,
+  .booking,
+  .actions,
+  .theme,
+  .address{
+    animation:fade var(--fade) both;
+    animation-delay:var(--fade-open);
+  }
+
+  .facade__door{ transition:opacity var(--fade), background-color var(--fade) }
+
+  /* смена темы: зал гаснет и загорается тем же переходом */
+  body{ transition:background-color var(--fade), color var(--fade) }
+  .facade__draft{ transition:filter var(--fade) }
+  .theme__track{ transition:border-color var(--fade) }
+  .theme__knob{ transition:opacity var(--fade), background-color var(--fade) }
+
+  /* панели: проявление и растворение, видимость снимается после него */
+  .panel{ transition:opacity var(--fade), visibility 0s linear 600ms }
+  .panel.is-open{ transition:opacity var(--fade), visibility 0s }
+  .field__value{ transition:border-color var(--fade), color var(--fade) }
+  .opt,
+  .cal__day{ transition:background-color var(--fade), border-color var(--fade) }
+  .address__link{ transition:color var(--fade) }
+  .book{ transition:background-color var(--fade), border-color var(--fade) }
+  .rules{ transition:color var(--fade) }
+}
+
+/* ── узкий экран: поля друг под другом ──────────────────────── */
+
+@media (max-width:800px){
+  /* палец крупнее курсора: кнопке нужна высота от 44 px */
+  :root{ --book-h: 46px }
+
+  .booking{
+    grid-template-columns:1fr;
+    gap:calc(var(--u) * 0.8);
+  }
+
+  /* поля идут в одну колонку — кнопка тоже во всю ширину */
+  .actions{ width:100% }
+  .book{ width:100% }
+
+  /* панели раскрываются вниз: поля идут столбцом, сверху места нет.
+     страница здесь всё равно прокручивается */
+  .panel{
+    top:100%;
+    bottom:auto;
+    margin-top:calc(var(--u) * 0.5);
+    margin-bottom:0;
+  }
+  .panel--cal{ width:100% }
+  .panel--cal,
+  .panel--time{ max-height:min(46svh, 420px); overflow-y:auto }
+
+  /* пальцу нужна клетка крупнее курсора */
+  .opt{ padding:.95em 0 }
+  .cal__day{ padding:.8em 0 }
+
+  /* кадр перестаёт зависеть от высоты окна: в вертикали её не хватает */
+  .stack{ --frame: 100% }
+}
