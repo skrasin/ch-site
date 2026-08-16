@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ч — галерея искусства и слушания</title>
-<meta name="description" content="Один человек, один час, один объект.">
+<title>кабинет медленного искусства</title>
+<meta name="description" content="Убежище для светского уединения. Одна комната, одно произведение, один час.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="brand/tokens.css">
@@ -15,31 +15,37 @@
   <div class="stack">
 
     <svg class="mark" viewBox="0 0 200 100" role="img"
-         aria-label="Ч — галерея искусства и слушания">
+         aria-label="h — кабинет медленного искусства">
+      <path d="M22 15 H10 V85 H22" fill="none"
+            stroke="currentColor" stroke-width="5"/>
+      <path d="M178 15 H190 V85 H178" fill="none"
+            stroke="currentColor" stroke-width="5"/>
       <line x1="100" y1="15" x2="100" y2="85"
             stroke="currentColor" stroke-width="10" stroke-linecap="butt"/>
       <circle cx="150" cy="50" r="15" fill="currentColor"/>
     </svg>
 
+    <p class="name">кабинет медленного искусства</p>
+
     <div class="facade">
       <button type="button" class="facade__door facade__door--left"
-              data-hall="Зал 1" aria-label="Зал 1"></button>
+              data-hall="Комната 1" aria-label="Комната 1"></button>
       <button type="button" class="facade__door facade__door--right"
-              data-hall="Зал 3" aria-label="Зал 3"></button>
+              data-hall="Комната 3" aria-label="Комната 3"></button>
       <img class="facade__draft" src="brand/facade-2x1.png" width="1800" height="900"
-           alt="Чертёж главного фасада: кирпичная стена, одна дверь и два окна">
+           alt="Чертёж главного фасада: кирпичная стена, дверь и два окна">
     </div>
 
     <div class="booking">
 
       <div class="field">
-        <span class="field__label" id="f-hall">Зал</span>
+        <span class="field__label" id="f-hall">Комната</span>
         <button type="button" class="field__value" id="v-hall"
                 data-panel="hall" aria-haspopup="true" aria-expanded="false"
-                aria-labelledby="f-hall v-hall">не выбран</button>
+                aria-labelledby="f-hall v-hall">не выбрана</button>
         <div class="panel" id="panel-hall">
-          <button type="button" class="opt" data-value="Зал 1">Зал 1</button>
-          <button type="button" class="opt" data-value="Зал 3">Зал 3</button>
+          <button type="button" class="opt" data-value="Комната 1">Комната 1</button>
+          <button type="button" class="opt" data-value="Комната 3">Комната 3</button>
         </div>
       </div>
 
