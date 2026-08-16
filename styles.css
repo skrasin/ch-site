@@ -164,8 +164,7 @@ body{
   height:44%;
 }
 
-/* дверь горит под курсором и остаётся гореть, когда её зал выбран */
-.facade__door:hover,
+/* дверь горит, когда её комната выбрана, и под пальцем во время нажатия */
 .facade__door:active,
 .facade__door.is-chosen{ opacity:1 }
 
@@ -175,10 +174,17 @@ body{
   outline-offset:3px;
 }
 
-/* пока курсор на одной двери, выбранная гаснет: горит всегда одна */
-.facade:has(.facade__door:hover) .facade__door.is-chosen:not(:hover){ opacity:0 }
+/* подсветка по курсору — только там, где курсор есть.
+   на тачскрине :hover залипает на последней нажатой двери, и правило
+   ниже гасило бы комнату, выбранную потом из списка: горела бы старая */
+@media (hover:hover) and (pointer:fine){
+  .facade__door:hover{ opacity:1 }
 
-/* ── строка брони: зал, дата, время ─────────────────────────── */
+  /* пока курсор на одной двери, выбранная гаснет: горит всегда одна */
+  .facade:has(.facade__door:hover) .facade__door.is-chosen:not(:hover){ opacity:0 }
+}
+
+/* ── строка брони: комната, дата, время ─────────────────────── */
 
 .booking{
   width:var(--frame);
@@ -393,7 +399,7 @@ body{
 .cal__day[aria-current="true"]{ border-bottom-color:var(--ochre) }
 .cal__day:focus-visible{ outline:2px solid var(--focus); outline-offset:-2px }
 
-/* ── свет в зале: светлая тема или тёмная ───────────────────── */
+/* ── свет в комнате: светлая тема или тёмная ────────────────── */
 
 .theme{
   display:inline-flex;
@@ -482,7 +488,7 @@ body{
 
   .facade__door{ transition:opacity var(--fade), background-color var(--fade) }
 
-  /* смена темы: зал гаснет и загорается тем же переходом */
+  /* смена темы: комната гаснет и загорается тем же переходом */
   body{ transition:background-color var(--fade), color var(--fade) }
   .facade__draft{ transition:filter var(--fade) }
   .theme__track{ transition:border-color var(--fade) }
